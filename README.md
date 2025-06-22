@@ -146,7 +146,7 @@ Source & Structure
 # **5. Exploratory Data Analysis (EDA)**
 
 #### **1. Sentiment Distribution**
-![Missing Values ](Images\distribution_of_sentiments.png)
+![Missing Values ](Images/distribution_of_sentiments.png)
 
 * Neutral (61%): Mostly informational tweets (e.g., "Just bought an iPhone.")
 
@@ -155,14 +155,14 @@ Source & Structure
 * Negative (6%) (e.g., "Google Maps crashed again.")
 
 #### 2. **Brand-wise Sentiment Comparison**
-[image](Images/sentiment_proportion_by_brand.png)
+![image](Images/sentiment_proportion_by_brand.png)
 
 * Apple: More tweets (27% of dataset), mixed sentiment.
 
 * Google: Fewer tweets (6.7%), but higher % positive.
 
 #### **3. words distribution in tweet by sentiment**
-[image](Images/words_distribution_in_tweet_by_sentiment.png)
+![image](Images/words_distribution_in_tweet_by_sentiment.png)
 
 * Positive: more words
 * Neutral the most words

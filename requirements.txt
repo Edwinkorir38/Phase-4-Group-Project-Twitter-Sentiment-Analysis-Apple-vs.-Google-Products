@@ -1,15 +1,10 @@
-matplotlib
-nltk
-pandas
 streamlit
-pandas
-numpy
-scikit-learn
 joblib
-sklearn
+scikit-learn==1.3.2
+pandas
 nltk
-contractions
 xgboost
+contractions
 
 
 

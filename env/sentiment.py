@@ -170,7 +170,6 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
-%matplotlib inline
 import string
 import warnings
 warnings.filterwarnings(action='ignore', category=FutureWarning)

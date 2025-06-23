@@ -165,6 +165,9 @@
 # 
 
 # %%
+import nltk
+nltk.data.path.append('nltk_data')
+
 import re
 import pandas as pd
 import numpy as np
@@ -175,10 +178,10 @@ import string
 import warnings
 warnings.filterwarnings(action='ignore', category=FutureWarning)
 
-import nltk
-nltk.download('punkt')
-nltk.download('stopwords')
-nltk.download('wordnet')
+
+#nltk.download('punkt')
+#nltk.download('stopwords')
+#nltk.download('wordnet')
 from nltk.stem import WordNetLemmatizer
 from sklearn.preprocessing import LabelEncoder
 from nltk.tokenize import word_tokenize, sent_tokenize

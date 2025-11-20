@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tweet Sentiment Analyzer - Batch</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        textarea { width: 100%; height: 150px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .Positive { background-color: #c6f6d5; }
+        .Negative { background-color: #feb2b2; }
+        .Neutral  { background-color: #fefcbf; }
+        button { margin-top: 10px; padding: 8px 16px; font-size: 14px; cursor: pointer; }
+        #loading { font-style: italic; color: #555; margin-top: 10px; }
+        #progress_container { width: 100%; background-color: #eee; border-radius: 5px; margin-top: 10px; }
+        #progress_bar { width: 0%; height: 20px; background-color: #4caf50; text-align: center; color: white; line-height: 20px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Tweet Sentiment Analyzer - Batch</h1>
+
+    <label>Enter tweets (one per line):</label><br>
+    <textarea id="tweets_input" placeholder="Type or paste multiple tweets..."></textarea><br><br>
+
+    <label>Select model:</label>
+    <select id="model_select">
+        <option value="logistic">Logistic Regression</option>
+        <option value="xgb">XGBoost</option>
+    </select><br><br>
+
+    <button id="copy_btn">Copy Results</button>
+    <button id="download_btn">Download CSV</button>
+
+    <div id="loading" style="display:none">Analyzing tweets...</div>
+    <div id="progress_container">
+        <div id="progress_bar">0%</div>
+    </div>
+
+    <h2>Predictions:</h2>
+    <div id="prediction_results">
+        <table>
+            <tr>
+                <th>Tweet</th>
+                <th>Predicted Sentiment</th>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        const tweetsInput = document.getElementById("tweets_input");
+        const modelSelect = document.getElementById("model_select");
+        const resultsTable = document.querySelector("#prediction_results table");
+        const copyBtn = document.getElementById("copy_btn");
+        const downloadBtn = document.getElementById("download_btn");
+        const loadingDiv = document.getElementById("loading");
+        const progressBar = document.getElementById("progress_bar");
+
+        let timeout = null;
+
+        async function predictBatch() {
+            const tweetsText = tweetsInput.value.trim();
+            const model = modelSelect.value;
+            if (!tweetsText) {
+                resultsTable.innerHTML = `<tr><th>Tweet</th><th>Predicted Sentiment</th></tr>`;
+                progressBar.style.width = "0%";
+                progressBar.textContent = "0%";
+                return;
+            }
+
+            const tweets = tweetsText.split("\n").map(t => t.trim()).filter(t => t);
+            resultsTable.innerHTML = `<tr><th>Tweet</th><th>Predicted Sentiment</th></tr>`;
+            loadingDiv.style.display = "block";
+            progressBar.style.width = "0%";
+            progressBar.textContent = "0%";
+
+            try {
+                const response = await fetch("/predict_batch", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ tweets, model })
+                });
+                const data = await response.json();
+                const predictions = data.predictions;
+
+                // Append rows progressively with a small delay to animate progress
+                for (let i = 0; i < predictions.length; i++) {
+                    const pred = predictions[i];
+                    const row = document.createElement("tr");
+                    row.className = pred.predicted_sentiment;
+                    row.innerHTML = `<td>${pred.tweet}</td><td>${pred.predicted_sentiment}</td>`;
+                    resultsTable.appendChild(row);
+
+                    const percent = Math.round(((i + 1) / predictions.length) * 100);
+                    progressBar.style.width = percent + "%";
+                    progressBar.textContent = percent + "%";
+
+                    // Small delay for progress bar animation
+                    await new Promise(res => setTimeout(res, 10));
+                }
+
+            } catch (err) {
+                alert("Error fetching predictions: " + err);
+            } finally {
+                loadingDiv.style.display = "none";
+            }
+        }
+
+        function debouncePredict() {
+            if (timeout) clearTimeout(timeout);
+            timeout = setTimeout(predictBatch, 500);
+        }
+
+        tweetsInput.addEventListener("input", debouncePredict);
+        modelSelect.addEventListener("change", predictBatch);
+
+        // Copy results
+        copyBtn.addEventListener("click", () => {
+            let textToCopy = "";
+            Array.from(resultsTable.rows).forEach(row => {
+                textToCopy += Array.from(row.cells).map(cell => cell.innerText).join("\t") + "\n";
+            });
+            navigator.clipboard.writeText(textToCopy).then(() => alert("Predictions copied to clipboard!"));
+        });
+
+        // Download CSV
+        downloadBtn.addEventListener("click", () => {
+            const rows = Array.from(resultsTable.rows).slice(1); // skip header
+            if (!rows.length) return alert("No predictions to download.");
+
+            let csvContent = "data:text/csv;charset=utf-8,Tweet,Predicted Sentiment\n";
+            rows.forEach(row => {
+                const cells = Array.from(row.cells).map(cell => `"${cell.innerText.replace(/"/g, '""')}"`);
+                csvContent += cells.join(",") + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "tweet_sentiments.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    </script>
+</body>
+</html>

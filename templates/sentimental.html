@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sentiment Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #eef1f4;
+            text-align: center;
+            padding-top: 60px;
+        }
+
+        .box {
+            background: white;
+            width: 500px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.1);
+        }
+
+        .label {
+            font-size: 20px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .positive { color: #28a745; }
+        .negative { color: #dc3545; }
+        .neutral  { color: #6c757d; }
+
+        a {
+            display: inline-block;
+            margin-top: 25px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 18px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h2>Sentiment Analysis Result</h2>
+
+        <p><strong>Input Text:</strong> {{ user_text }}</p>
+
+        <div class="label">
+            Logistic Regression Prediction:
+            <span class="{% if lr_prediction == 'positive' %}positive{% elif lr_prediction == 'negative' %}negative{% else %}neutral{% endif %}">
+                {{ lr_prediction }}
+            </span>
+        </div>
+
+        <div class="label">
+            XGBoost Prediction:
+            <span class="{% if xgb_prediction == 'positive' %}positive{% elif xgb_prediction == 'negative' %}negative{% else %}neutral{% endif %}">
+                {{ xgb_prediction }}
+            </span>
+        </div>
+
+        <a href="/">&#8592; Back to Home</a>
+    </div>
+
+</body>
+</html>
+

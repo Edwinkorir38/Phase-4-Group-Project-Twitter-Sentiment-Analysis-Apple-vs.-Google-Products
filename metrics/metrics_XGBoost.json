@@ -1,0 +1,74 @@
+{
+  "accuracy": 0.6587389380530974,
+  "report": {
+    "0": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 31.0
+    },
+    "1": {
+      "precision": 0.42857142857142855,
+      "recall": 0.1592920353982301,
+      "f1-score": 0.23225806451612904,
+      "support": 113.0
+    },
+    "2": {
+      "precision": 0.6854778028592927,
+      "recall": 0.8474418604651163,
+      "f1-score": 0.7579034941763727,
+      "support": 1075.0
+    },
+    "3": {
+      "precision": 0.6078886310904872,
+      "recall": 0.44482173174872663,
+      "f1-score": 0.5137254901960784,
+      "support": 589.0
+    },
+    "accuracy": 0.6587389380530974,
+    "macro avg": {
+      "precision": 0.4304844656303021,
+      "recall": 0.3628889069030182,
+      "f1-score": 0.375971762222145,
+      "support": 1808.0
+    },
+    "weighted avg": {
+      "precision": 0.6323913789903806,
+      "recall": 0.6587389380530974,
+      "f1-score": 0.6325087009156048,
+      "support": 1808.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      0,
+      0,
+      22,
+      9
+    ],
+    [
+      1,
+      18,
+      78,
+      16
+    ],
+    [
+      4,
+      16,
+      911,
+      144
+    ],
+    [
+      1,
+      8,
+      318,
+      262
+    ]
+  ],
+  "classes": [
+    "I can't tell",
+    "Negative emotion",
+    "No emotion toward brand or product",
+    "Positive emotion"
+  ]
+}
